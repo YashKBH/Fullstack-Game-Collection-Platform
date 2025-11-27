@@ -272,15 +272,4 @@ const API_BASE_URL = process.env.API_URL || 'http://localhost:3000/api';
 - **Sound Engineering**: Proper separation of concerns, modular design
 - **End-to-End Ownership**: Full control from frontend to backend to deployment
 
-## 📄 License
-
-MIT License - See LICENSE file for details
-
-## 👤 Author
-
-Karen Cadavos
-
----
-
-**Built with ❤️ to demonstrate full-stack engineering capabilities**
 
