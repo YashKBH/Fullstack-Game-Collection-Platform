@@ -1,113 +1,151 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>ALL FOR ONE | A Collection of Simple Games</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-    <link rel="manifest" href="manifest.webmanifest">
-    <script src="game-api.js"></script>
-  </head>
-  <body>
-    <div id="unity-container">
-      <canvas id="unity-canvas" width=1920 height=1080 tabindex="-1"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-subtitle">A Collection of Simple Games Developed by Karen Cadavos</div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALL FOR ONE - Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <h1>🎮 ALL FOR ONE</h1>
+      <p class="subtitle">Game Analytics & Management Dashboard</p>
+    </header>
+
+    <nav class="dashboard-nav">
+      <button class="nav-btn active" data-view="overview">Overview</button>
+      <button class="nav-btn" data-view="games">Games</button>
+      <button class="nav-btn" data-view="scores">Leaderboard</button>
+      <button class="nav-btn" data-view="analytics">Analytics</button>
+    </nav>
+
+    <main class="dashboard-content">
+      <!-- Overview View -->
+      <div id="overview-view" class="view active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-info">
+              <h3 id="total-games">-</h3>
+              <p>Total Games</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-info">
+              <h3 id="total-scores">-</h3>
+              <p>Total Scores</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-info">
+              <h3 id="unique-players">-</h3>
+              <p>Unique Players</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-info">
+              <h3 id="high-score">-</h3>
+              <p>High Score</p>
+            </div>
+          </div>
         </div>
-        <div id="unity-progress-text">0%</div>
+
+        <div class="charts-section">
+          <div class="chart-card">
+            <h2>Recent Activity</h2>
+            <div id="activity-timeline" class="timeline"></div>
+          </div>
+          <div class="chart-card">
+            <h2>Top Games</h2>
+            <div id="top-games" class="top-games-list"></div>
+          </div>
+        </div>
       </div>
-      <div id="unity-warning"> </div>
+
+      <!-- Games View -->
+      <div id="games-view" class="view">
+        <div class="view-header">
+          <h2>Games Management</h2>
+          <button class="btn-primary" id="add-game-btn">+ Add Game</button>
+        </div>
+        <div id="games-list" class="games-list"></div>
+      </div>
+
+      <!-- Scores View -->
+      <div id="scores-view" class="view">
+        <div class="view-header">
+          <h2>Leaderboard</h2>
+          <select id="game-filter" class="filter-select">
+            <option value="">All Games</option>
+          </select>
+        </div>
+        <div id="leaderboard" class="leaderboard-table"></div>
+      </div>
+
+      <!-- Analytics View -->
+      <div id="analytics-view" class="view">
+        <div class="view-header">
+          <h2>Analytics</h2>
+          <select id="analytics-period" class="filter-select">
+            <option value="24">Last 24 Hours</option>
+            <option value="168">Last 7 Days</option>
+            <option value="720">Last 30 Days</option>
+          </select>
+        </div>
+        <div class="analytics-grid">
+          <div class="analytics-card">
+            <h3>Event Metrics</h3>
+            <div id="event-metrics"></div>
+          </div>
+          <div class="analytics-card">
+            <h3>Active Sessions</h3>
+            <div id="active-sessions" class="big-number">-</div>
+          </div>
+          <div class="analytics-card">
+            <h3>Events by Type</h3>
+            <div id="events-by-type"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modal-title">Add Game</h2>
+        <form id="game-form">
+          <div class="form-group">
+            <label for="game-name">Game Name *</label>
+            <input type="text" id="game-name" required>
+          </div>
+          <div class="form-group">
+            <label for="game-description">Description</label>
+            <textarea id="game-description" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="game-category">Category</label>
+            <input type="text" id="game-category">
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" id="cancel-btn">Cancel</button>
+            <button type="submit" class="btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <script>
-      window.addEventListener("load", function () {
-        if ("serviceWorker" in navigator) {
-          navigator.serviceWorker.register("ServiceWorker.js");
-        }
-      });
 
-      var container = document.querySelector("#unity-container");
-      var canvas = document.querySelector("#unity-canvas");
-      var loadingBar = document.querySelector("#unity-loading-bar");
-      var progressBarFull = document.querySelector("#unity-progress-bar-full");
-      var warningBanner = document.querySelector("#unity-warning");
+    <div id="loading" class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+  </div>
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-      function unityShowBanner(msg, type) {
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
-
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/AllForOne_WebGame.loader.js";
-      var config = {
-        dataUrl: buildUrl + "/AllForOne_WebGame.data",
-        frameworkUrl: buildUrl + "/AllForOne_WebGame.framework.js",
-        codeUrl: buildUrl + "/AllForOne_WebGame.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "Karen Cadavos",
-        productName: "ALL FOR ONE",
-        productVersion: "1.0",
-        showBanner: unityShowBanner,
-      };
-
-      // By default Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
-
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-      }
-
-      loadingBar.style.display = "block";
-
-      var progressText = document.querySelector("#unity-progress-text");
-      
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          var progressPercent = Math.round(100 * progress);
-          progressBarFull.style.width = 100 * progress + "%";
-          if (progressText) {
-            progressText.textContent = progressPercent + "%";
-          }
-        }).then((unityInstance) => {
-          loadingBar.style.display = "none";
-          canvas.style.opacity = "1";
-        }).catch((message) => {
-          alert(message);
-        });
-      };
-      document.body.appendChild(script);
-    </script>
-  </body>
+  <script src="api.js"></script>
+  <script src="dashboard.js"></script>
+</body>
 </html>
+
+
